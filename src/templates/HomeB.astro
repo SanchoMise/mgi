@@ -1,0 +1,50 @@
+---
+// Variante B : l'accueil est organisé PAR DISCIPLINE. De grandes bandes typographiques, une par discipline.
+import Section from '../components/Section.astro';
+import Sessions from '../components/Sessions.astro';
+import CardGrid from '../components/CardGrid.astro';
+import { getPage } from '../data/pages';
+import { pathOf, indexVariant } from '../data/variants';
+interface Props { variant: string; id: string; }
+const { variant, id } = Astro.props;
+const page = getPage(id);
+const idx = indexVariant(variant);
+const discs = [
+  { id: 'disc-photo', name: 'Photo', stage: 'stage-photo', forms: ['formation-cyanotype', 'formation-stenope'] },
+  { id: 'disc-video', name: 'Vidéo', stage: 'stage-video', forms: ['formation-cinema-animation', 'formation-realisation-audiovisuelle'] },
+  { id: 'disc-theatre', name: 'Théâtre', stage: 'stage-theatre', forms: ['formation-oral-aisance-impact', 'formation-theatre-3-6-ans-album'] },
+];
+const toussaint = getPage('stages-ados').sessions![0];
+---
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow reveal">Maison du Geste et de l'Image · Paris 1er</p>
+    <h1 class="reveal" style="--i:1;max-width:20ch">{page.h1}</h1>
+    <p class="lead reveal" style="--i:2">Qu'est-ce que vous avez envie de faire ? Chaque discipline réunit les stages ados, les formations et les ateliers en classe.</p>
+  </div>
+</section>
+<section class="section" style="padding-top:0">
+  <div class="wrap bands">
+    {discs.map((d, n) => (
+      <div class={`dband dband--${n + 1} reveal`} style={`--i:${n}`}>
+        <a class="dband__name" href={pathOf(variant, d.id)}>{d.name}<span class="arrow" aria-hidden="true">→</span></a>
+        <ul class="dband__links">
+          <li><a href={pathOf(variant, d.stage)}>Stage ados 12-16 ans</a></li>
+          {d.forms.filter((f) => idx.has(f)).map((f) => <li><a href={pathOf(variant, f)}>Formation : {getPage(f).label}</a></li>)}
+          <li><a href={pathOf(variant, 'ateliers-classe')}>Atelier en classe</a></li>
+        </ul>
+      </div>
+    ))}
+  </div>
+  <div class="wrap" style="margin-top:1.25rem;display:flex;gap:1rem;flex-wrap:wrap">
+    <a class="chip" href={pathOf(variant, 'disc-son')}>Son</a>
+    <a class="chip" href={pathOf(variant, 'disc-danse')}>Danse</a>
+    <span class="muted">Offres à confirmer</span>
+  </div>
+</section>
+<Section tone="soft" title="Prochaines dates" eyebrow="Calendrier des stages">
+  <Sessions sessions={[toussaint]} cta={{ href: pathOf(variant, 'stages-ados')!, label: 'Tout le calendrier' }} />
+</Section>
+<Section title="Par profil">
+  <div class="grid grid--3"><CardGrid variant={variant} ids={['stages-ados', 'ecoles', 'formations']} /></div>
+</Section>

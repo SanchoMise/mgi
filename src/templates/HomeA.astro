@@ -1,0 +1,46 @@
+---
+// Variante A : l'accueil est un HUB PAR PUBLIC. Quatre grandes portes, et rien d'autre en vedette.
+import Apostrophe from '../components/Apostrophe.astro';
+import Visual from '../components/Visual.astro';
+import Section from '../components/Section.astro';
+import { getPage } from '../data/pages';
+import { pathOf, childrenOf } from '../data/variants';
+interface Props { variant: string; id: string; }
+const { variant, id } = Astro.props;
+const page = getPage(id);
+const doors = [
+  { id: 'stages-ados', n: '1', who: 'Parents et ados', text: 'Trouver un stage pendant les vacances ou les samedis, voir les dates, s\'inscrire.' },
+  { id: 'ecoles', n: '2', who: 'Enseignants et écoles', text: 'Monter un parcours artistique avec votre classe, découvrir des réalisations.' },
+  { id: 'formations', n: '3', who: 'Professionnels', text: 'Formations, accueil de tournages, résidences d\'artistes.' },
+  { id: 'maison', n: '4', who: 'La Maison', text: 'Qui nous sommes, l\'équipe, les partenaires, la presse, le lieu et le contact.' },
+];
+---
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow reveal">Maison du Geste et de l'Image · Paris 1er</p>
+    <h1 class="reveal" style="--i:1;max-width:20ch">{page.h1}</h1>
+    <p class="lead reveal" style="--i:2">Qui êtes-vous ? Choisissez votre porte d'entrée : chaque public a son propre espace.</p>
+  </div>
+</section>
+<section class="section" style="padding-top:0">
+  <div class="wrap doors">
+    {doors.map((d, n) => (
+      <article class={`door door--${n + 1} reveal`} style={`--i:${n}`}>
+        <Apostrophe />
+        <p class="door__n">{d.n}</p>
+        <h2><a class="door__link" href={pathOf(variant, d.id)}>{d.who}</a></h2>
+        <p>{d.text}</p>
+        <ul>
+          {childrenOf(variant, d.id).filter((c) => !c.id.startsWith('formation-') && !['real-cines', 'real-etranges'].includes(c.id)).slice(0, 5).map((c) => <li><a href={c.path}>{c.label}</a></li>)}
+          {d.id === 'formations' && <li><a href={pathOf(variant, 'formations')}>8 formations 2026-2027</a></li>}
+        </ul>
+      </article>
+    ))}
+  </div>
+</section>
+<Section tone="soft" title="Une maison, plusieurs entrées">
+  <div class="two">
+    <p class="lead">En variante A, aucune discipline ni aucune offre n'est mise en vedette sur l'accueil : le visiteur choisit d'abord <em>qui il est</em>, puis découvre l'offre qui lui correspond.</p>
+    <Visual tone="secondary" ratio="16 / 9" label="Photo du lieu [à fournir]" />
+  </div>
+</Section>

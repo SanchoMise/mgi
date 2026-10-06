@@ -67,7 +67,7 @@ export const VARIANTS: Variant[] = [
         { id: 'disc-theatre', children: [{ id: 'stage-theatre', slug: 'stage-ados' }, f('oral-aisance-impact'), f('theatre-3-6-ans-album')] },
         { id: 'disc-son', nav: false, children: [f('creation-sonore')] },
         { id: 'disc-danse', nav: false, children: [f('mouvement-danse')] },
-        { id: 'stages-ados', label: 'Calendrier des stages', children: [{ id: 'samedis' }, { id: 'stage-3e' }, { id: 'tarifs-inscription' }] },
+        { id: 'stages-ados', label: 'Calendrier', children: [{ id: 'samedis' }, { id: 'stage-3e' }, { id: 'tarifs-inscription' }] },
         { id: 'formations', label: 'Formations', children: [{ id: 'accueil-espaces' }, { id: 'artistes' }] },
         { id: 'ecoles', children: [{ id: 'ateliers-classe' }, { id: 'parcours-croises' }] },
         maison,

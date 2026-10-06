@@ -74,7 +74,7 @@ a:hover { color: var(--color-text); }
 .nav-toggle { display: none; }
 .nav { display: flex; align-items: center; gap: .25rem; }
 .nav ul { display: flex; gap: .25rem; list-style: none; margin: 0; padding: 0; }
-.nav a:not(.btn) { display: block; padding: .5rem .85rem; border-radius: 999px; color: var(--color-text); text-decoration: none; font-weight: 600; }
+.nav a:not(.btn) { display: block; white-space: nowrap; padding: .5rem .85rem; border-radius: 999px; color: var(--color-text); text-decoration: none; font-weight: 600; }
 .nav a:not(.btn):hover { background: var(--color-primary-soft); }
 .nav a[aria-current] { background: var(--color-primary); color: var(--color-on-primary); }
 @media (max-width: 62rem) {
@@ -243,3 +243,50 @@ details[open] summary { color: var(--color-primary-ink); }
 
 /* Sur petit écran, la barre de prototype ne reste pas collée (elle prendrait trop de place). */
 @media (max-width: 40rem) { .proto { position: relative; } .site-header { top: 0; } }
+
+/* ========= Accueil variante A : quatre portes par public ========= */
+.doors { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.door { position: relative; overflow: hidden; border-radius: var(--radius); padding: 1.75rem; min-height: 24rem; display: flex; flex-direction: column; gap: .5rem; }
+.door h2 { font-size: 1.8rem; margin: 0; }
+.door p { margin: 0; }
+.door ul { list-style: none; padding: 0; margin: auto 0 0; display: grid; gap: .3rem; position: relative; }
+.door a { color: inherit; font-weight: 600; }
+.door a:hover { text-decoration-thickness: .2em; }
+.door__link::after { content: ''; position: absolute; inset: 0; } /* toute la carte est cliquable */
+.door ul a { position: relative; z-index: 1; }
+.door__n { font-family: var(--font-display); font-size: 3.5rem; line-height: 1; opacity: .35; }
+.door .apostrophe { position: absolute; right: -1.5rem; top: -1rem; height: 9rem; opacity: .18; }
+.door--1 { background: var(--color-primary); color: var(--color-on-primary); }
+.door--2 { background: var(--color-secondary); color: var(--color-on-secondary); }
+.door--3 { background: var(--color-accent); color: var(--color-on-accent); }
+.door--4 { background: var(--color-ink); color: var(--color-on-ink); }
+.door:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+
+/* ========= Accueil variante B : bandes par discipline ========= */
+.bands { display: grid; gap: 1rem; }
+.dband { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1.5rem; align-items: center; padding: clamp(1.25rem, 3vw, 2.25rem) clamp(1.25rem, 4vw, 3rem); border-radius: var(--radius); }
+.dband--1 { background: var(--color-primary); color: var(--color-on-primary); }
+.dband--2 { background: var(--color-secondary); color: var(--color-on-secondary); }
+.dband--3 { background: var(--color-accent); color: var(--color-on-accent); }
+.dband__name { font-family: var(--font-display); font-weight: 800; font-size: clamp(3rem, 12vw, 7.5rem); line-height: .95; color: inherit; text-decoration: none; display: inline-flex; align-items: baseline; gap: .3em; }
+.dband__name .arrow { font-size: .5em; transition: transform .3s var(--ease); }
+.dband__name:hover .arrow { transform: translateX(.3em); }
+.dband__links { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+.dband__links a { color: inherit; font-weight: 600; }
+@media (max-width: 52rem) { .dband { grid-template-columns: 1fr; } }
+
+/* ========= Plan du site (arbre de la variante) ========= */
+.tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+.tree ul { margin-left: .55rem; padding-left: 1rem; border-left: 2px solid currentColor; opacity: .95; }
+.tree li { padding: .12rem 0; }
+.tree__root > a, .tree__root { font-weight: 700; }
+.tree__top > a { font-weight: 700; }
+.tree small, .tree__more { opacity: .65; margin: 0; font-size: .85em; }
+.tree a { text-decoration: none; }
+.tree a:hover { text-decoration: underline; }
+.panel .tree a { color: #f3f3f5; }
+.panel .tree ul { border-color: #55555e; }
+.compare { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); margin-top: 2rem; }
+.compare .card { min-height: 0; }
+.compare .tree { font-size: .95rem; }
+.compare .tree ul { border-color: var(--color-border); }

@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Logo from '../components/Logo.astro';
 import ProtoScript from '../components/ProtoScript.astro';
 import { VARIANTS } from '../data/variants';
+import { renderTree } from '../lib/tree';
 import theme from '../theme/theme.json';
 ---
 <Base title="Prototype d'arborescence MGI | Guide" description="Prototype non indexé pour comparer trois arborescences du futur site de la Maison du Geste et de l'Image.">
@@ -21,8 +22,18 @@ import theme from '../theme/theme.json';
         </a>
       ))}
     </div>
+    <h2 style="margin-top:3rem">Les trois arbres côte à côte</h2>
+    <div class="compare">
+      {VARIANTS.map((v) => (
+        <div class="card">
+          <h3>{v.name} · {v.tagline}</h3>
+          <Fragment set:html={renderTree(v.key, { maxDepth: 2, collapse: ['formations'] })} />
+        </div>
+      ))}
+    </div>
     <h2 style="margin-top:3rem">Comment ça marche</h2>
     <ul>
+      <li><strong>Plan du site :</strong> bouton « Plan du site » de la barre noire : l'arbre complet de la variante affichée, avec des liens.</li>
       <li><strong>Couleurs :</strong> bouton « Couleurs » de la barre noire : saisons prédéfinies ou couleur libre. Tout le reste est calculé à partir d'une seule couleur.</li>
       <li><strong>Retours :</strong> bouton « Retours » : un commentaire par page, enregistré dans votre navigateur, à copier ou télécharger pour nous l'envoyer.</li>
       <li><strong>Infos SEO :</strong> title, description, H1, URL et clics depuis l'accueil de chaque page.</li>

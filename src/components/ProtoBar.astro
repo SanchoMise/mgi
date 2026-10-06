@@ -5,6 +5,7 @@ import theme from '../theme/theme.json';
 import { VARIANTS, equivalentPath, clicks } from '../data/variants';
 import { getPage } from '../data/pages';
 import { SITE } from '../data/site';
+import { renderTree } from '../lib/tree';
 
 interface Props { variant: string; id: string; path: string; }
 const { variant, id, path } = Astro.props;
@@ -24,11 +25,19 @@ const sourceLabel = { 'réel': 'Texte repris du site actuel', 'adapté': 'Texte 
     </nav>
     <span class="muted-proto">{VARIANTS.find((v) => v.key === variant)!.tagline}</span>
     <span class="proto__sp"></span>
+    <button class="proto__btn" type="button" aria-expanded="false" aria-controls="panel-plan" data-panel="plan">Plan du site</button>
     <button class="proto__btn" type="button" aria-expanded="false" aria-controls="panel-couleurs" data-panel="couleurs">Couleurs</button>
     <button class="proto__btn" type="button" aria-expanded="false" aria-controls="panel-seo" data-panel="seo">Infos SEO</button>
     <button class="proto__btn" type="button" aria-expanded="false" aria-controls="panel-retours" data-panel="retours">Retours <span class="count" data-fb-count hidden>0</span></button>
     <a class="proto__btn" href="/" style="text-decoration:none">Guide</a>
   </div>
+
+  <section class="panel" id="panel-plan" hidden aria-label="Plan du site de cette variante">
+    <div class="panel__in">
+      <h2>Arborescence de la variante {variant.toUpperCase()} : {VARIANTS.find((v) => v.key === variant)!.tagline}</h2>
+      <div class="cols" style="columns:16rem;display:block"><Fragment set:html={renderTree(variant, { collapse: ['formations'] })} /></div>
+    </div>
+  </section>
 
   <section class="panel" id="panel-couleurs" hidden aria-label="Couleurs de la saison">
     <div class="panel__in cols">
