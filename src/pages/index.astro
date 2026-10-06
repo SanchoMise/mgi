@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+import ProtoScript from '../components/ProtoScript.astro';
+import { VARIANTS } from '../data/variants';
+import theme from '../theme/theme.json';
+---
+<Base title="Prototype d'arborescence MGI | Guide" description="Prototype non indexé pour comparer trois arborescences du futur site de la Maison du Geste et de l'Image.">
+  <div data-proto data-variant="a" data-path="/" hidden></div>
+  <main id="contenu" class="wrap section">
+    <Logo class="" />
+    <p class="eyebrow" style="margin-top:2rem">Prototype d'arborescence · non indexé</p>
+    <h1>Trois façons d'organiser le futur site de la MGI</h1>
+    <p class="lead">Cliquez dans chaque variante comme un visiteur. Le sélecteur <strong>A / B / C</strong> en haut de chaque page vous fait passer à la page équivalente dans une autre arborescence.</p>
+    <div class="grid grid--3" style="margin-top:2rem">
+      {VARIANTS.map((v, n) => (
+        <a class={`card card--path is-${n + 1}`} href={`/${v.key}/`}>
+          <h2 style="font-size:1.6rem;margin:0">{v.name} · {v.tagline}</h2>
+          <p>{v.description}</p>
+          <span class="go">Explorer <span class="arrow" aria-hidden="true">→</span></span>
+        </a>
+      ))}
+    </div>
+    <h2 style="margin-top:3rem">Comment ça marche</h2>
+    <ul>
+      <li><strong>Couleurs :</strong> bouton « Couleurs » de la barre noire : saisons prédéfinies ou couleur libre. Tout le reste est calculé à partir d'une seule couleur.</li>
+      <li><strong>Retours :</strong> bouton « Retours » : un commentaire par page, enregistré dans votre navigateur, à copier ou télécharger pour nous l'envoyer.</li>
+      <li><strong>Infos SEO :</strong> title, description, H1, URL et clics depuis l'accueil de chaque page.</li>
+      <li><strong>Contenu :</strong> les textes viennent du site actuel quand ils existent. <em class="tbd">[à compléter]</em> signale une information que la MGI doit fournir. Aucun tarif ni date n'a été inventé.</li>
+    </ul>
+    <p class="muted">{theme.seasons.length} jeux de couleurs prédéfinis. Ce site n'est pas le site final et n'est pas indexé par les moteurs de recherche.</p>
+  </main>
+  <ProtoScript />
+</Base>

@@ -1,0 +1,11 @@
+{
+  "default": "automne",
+  "seasons": [
+    { "id": "automne", "label": "Automne", "primary": "#eca06c" },
+    { "id": "hiver", "label": "Hiver", "primary": "#4f6bd6" },
+    { "id": "printemps", "label": "Printemps", "primary": "#5fb87a" },
+    { "id": "ete", "label": "Été", "primary": "#f2c230" },
+    { "id": "mgi-rose", "label": "Rose MGI", "primary": "#ed58ad" },
+    { "id": "mgi-violet", "label": "Violet MGI", "primary": "#292a6c" }
+  ]
+}

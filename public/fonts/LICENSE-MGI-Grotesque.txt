@@ -1,0 +1,7 @@
+MGI Grotesque
+Copyright 2022 The Bricolage Grotesque Project Authors (https://github.com/ateliertriay/bricolage)
+Redesigned by Bertrand Sandrez for the Maison du Geste et de l'Image, 2024.
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+The full license text is provided in OFL-BricolageGrotesque.txt (same folder) and is also
+available with a FAQ at https://openfontlicense.org

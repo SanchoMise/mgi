@@ -1,0 +1,13 @@
+---
+import { rich } from '../lib/text';
+import { getPage } from '../data/pages';
+interface Props { id: string; }
+const page = getPage(Astro.props.id);
+---
+<header class="page-hero wrap">
+  {page.audience && <p class="eyebrow">{page.audience}</p>}
+  <h1>{page.h1}</h1>
+  {page.subtitle && <p class="subtitle">{page.subtitle}</p>}
+  {page.tags && <p>{page.tags.map((t) => <span class="chip" style="margin-right:.4rem">{t}</span>)}</p>}
+  {page.lead && <p class="lead" set:html={rich(page.lead)} />}
+</header>

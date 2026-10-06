@@ -1,0 +1,40 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import theme from '../theme/theme.json';
+import { buildPalette, paletteToCss } from '../theme/color.js';
+import { SITE } from '../data/site';
+
+interface Props { title: string; description: string; }
+const { title, description } = Astro.props;
+const initial = theme.seasons.find((s) => s.id === theme.default)!;
+const css = paletteToCss(buildPalette(initial.primary));
+---
+<!doctype html>
+<html lang="fr" class="no-js" style={css}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <!-- Prototype : jamais indexé (aussi : robots.txt Disallow et en-tête X-Robots-Tag). -->
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="theme-color" content="#292a6c" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/MGI-Grotesque.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/BricolageGrotesque-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Applique la couleur choisie par le visiteur avant le premier affichage (évite le flash). -->
+    <script is:inline>
+      document.documentElement.classList.remove('no-js');
+      try {
+        var t = localStorage.getItem('mgi-theme-css');
+        if (t) document.documentElement.style.cssText = t;
+      } catch (e) {}
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip" href="#contenu">Aller au contenu</a>
+    <slot />
+  </body>
+</html>

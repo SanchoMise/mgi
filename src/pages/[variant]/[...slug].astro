@@ -1,0 +1,15 @@
+---
+import Page from '../../layouts/Page.astro';
+import { VARIANTS, indexVariant } from '../../data/variants';
+
+export function getStaticPaths() {
+  return VARIANTS.flatMap((v) =>
+    [...indexVariant(v.key).values()].map((e) => ({
+      params: { variant: v.key, slug: e.segments.length ? e.segments.join('/') : undefined },
+      props: { variant: v.key, id: e.id },
+    })),
+  );
+}
+const { variant, id } = Astro.props;
+---
+<Page variant={variant} id={id} />

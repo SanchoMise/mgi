@@ -1,0 +1,44 @@
+---
+import PageHero from '../components/PageHero.astro';
+import Related from '../components/Related.astro';
+import Visual from '../components/Visual.astro';
+import Apostrophe from '../components/Apostrophe.astro';
+import { pathOf } from '../data/variants';
+import { getPage } from '../data/pages';
+interface Props { variant: string; id: string; }
+const { variant, id } = Astro.props;
+const page = getPage(id);
+// Titres réels relevés dans la galerie actuelle. ~250 fiches restent à migrer (voir docs/inventaire.md).
+const items = [
+  { title: '« Des cinés, la Vie ! » avec L\'Archipel des lucioles', public: 'Champ social', disc: 'Vidéo', pid: 'real-cines' },
+  { title: '« Étranges créatures » · Haut-Parleurs, 5e édition', public: 'Samedis', disc: '[à compléter]', pid: 'real-etranges' },
+  { title: '« Quartier 3 : Destruction totale » · Printemps d\'automne, saison 8', public: 'Ateliers vacances', disc: 'Théâtre', pid: undefined },
+];
+const publics = [...new Set(items.map((i) => i.public))];
+const discs = [...new Set(items.map((i) => i.disc).filter((d) => !d.startsWith('[')))];
+---
+<PageHero id={id} />
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="filters" role="group" aria-label="Filtrer les réalisations" data-filters>
+      <button type="button" aria-pressed="true" data-filter="">Tout</button>
+      {[...publics, ...discs].map((f) => <button type="button" aria-pressed="false" data-filter={f}>{f}</button>)}
+    </div>
+    <div class="grid" data-gallery>
+      {items.map((i) => {
+        const href = i.pid ? pathOf(variant, i.pid) : undefined;
+        const Tag = href ? 'a' : 'div';
+        return (
+          <Tag class="card reveal" href={href} data-tags={`${i.public}|${i.disc}`}>
+            <Apostrophe />
+            <h3>{i.title}</h3>
+            <p>{i.public} · {i.disc}</p>
+            <span class="go">{href ? 'Voir la réalisation' : 'Fiche à créer'} {href && <span class="arrow" aria-hidden="true">→</span>}</span>
+          </Tag>
+        );
+      })}
+    </div>
+    <p class="note" style="margin-top:1.5rem">Dans le site final : une galerie filtrable (public, discipline, année) remplace les fiches /portfolio/ ; seules les plus fortes restent indexées.</p>
+    <div style="margin-top:2rem"><Related variant={variant} ids={page.related} /></div>
+  </div>
+</section>

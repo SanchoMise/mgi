@@ -1,0 +1,47 @@
+---
+// Gabarit commun aux offres : stage (parents/ados), atelier en classe (écoles), formation (pros).
+import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
+import Sessions from '../components/Sessions.astro';
+import Faq from '../components/Faq.astro';
+import Related from '../components/Related.astro';
+import Visual from '../components/Visual.astro';
+import { rich } from '../lib/text';
+import { getPage } from '../data/pages';
+import { pathOf } from '../data/variants';
+import { SITE } from '../data/site';
+interface Props { variant: string; id: string; }
+const { variant, id } = Astro.props;
+const page = getPage(id);
+const contact = pathOf(variant, 'contact')!;
+const tarifs = pathOf(variant, 'tarifs-inscription');
+const cta = page.template === 'stage'
+  ? { href: SITE.helloAsso, label: "S'inscrire (HelloAsso)", external: true, note: 'Lien HelloAsso réel de chaque session : [à compléter]' }
+  : page.template === 'formation'
+    ? { href: contact, label: 'Demander le programme', external: false, note: 'Programme 2026-2027 : fiches PDF sur le site actuel.' }
+    : { href: contact, label: 'Contacter la MGI', external: false, note: 'Les responsables de secteurs co-construisent le parcours avec vous.' };
+const tone = page.discipline === 'video' ? 'secondary' : page.discipline === 'theatre' ? 'accent' : 'primary';
+---
+<PageHero id={id} />
+<section class="section" style="padding-top:0">
+  <div class="wrap two">
+    <div>
+      {page.sessions && <Sessions sessions={page.sessions} cta={page.template === 'stage' ? { href: cta.href, label: cta.label, external: true } : undefined} />}
+      {page.body && <div style="margin-top:1.5rem">{page.body.map((p) => <p set:html={rich(p)} />)}</div>}
+      {page.facts && (
+        <div style="margin-top:2rem">
+          <h2 style="font-size:1.4rem">En pratique</h2>
+          <dl class="facts">{page.facts.map(([k, v]) => <><dt>{k}</dt><dd set:html={rich(v)} /></>)}</dl>
+        </div>
+      )}
+      {page.faq && <div style="margin-top:2.5rem"><h2 style="font-size:1.4rem">Questions fréquentes</h2><Faq items={page.faq} /></div>}
+    </div>
+    <aside class="aside" aria-label="Inscription et informations">
+      <Visual tone={tone} ratio="4 / 3" label={page.template === 'stage' ? 'Photo du stage [à fournir]' : 'Visuel [à fournir]'} />
+      <a class="btn" href={cta.href} {...(cta.external ? { target: '_blank', rel: 'noopener' } : {})}>{cta.label} <span class="arrow" aria-hidden="true">→</span></a>
+      <p class="note" set:html={rich(cta.note)} />
+      {page.template === 'stage' && tarifs && <a href={tarifs}>Tarifs et modalités d'inscription</a>}
+      <Related variant={variant} ids={page.related} />
+    </aside>
+  </div>
+</section>

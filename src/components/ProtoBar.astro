@@ -1,0 +1,99 @@
+---
+// Barre de prototype : sélecteur de variante, couleurs saisonnières, retours du client, infos SEO.
+// Elle ne fait pas partie du design du site final : tout ce qui est ici disparaît à la passation WordPress.
+import theme from '../theme/theme.json';
+import { VARIANTS, equivalentPath, clicks } from '../data/variants';
+import { getPage } from '../data/pages';
+import { SITE } from '../data/site';
+
+interface Props { variant: string; id: string; path: string; }
+const { variant, id, path } = Astro.props;
+const page = getPage(id);
+const depth = clicks(variant, id);
+const sourceLabel = { 'réel': 'Texte repris du site actuel', 'adapté': 'Texte adapté du site actuel', 'à compléter': 'Contenu factice / à compléter' }[page.source];
+---
+<div class="proto" data-proto data-variant={variant} data-path={path}>
+  <div class="proto__in">
+    <strong>Prototype MGI</strong>
+    <nav class="seg" aria-label="Choisir une arborescence">
+      {VARIANTS.map((v) => (
+        <a href={equivalentPath(v.key, id)} aria-current={v.key === variant ? 'true' : undefined} title={`${v.name} : ${v.tagline}`} data-astro-prefetch="false">
+          {v.key.toUpperCase()} <span class="sr-only">{v.tagline}</span>
+        </a>
+      ))}
+    </nav>
+    <span class="muted-proto">{VARIANTS.find((v) => v.key === variant)!.tagline}</span>
+    <span class="proto__sp"></span>
+    <button class="proto__btn" type="button" aria-expanded="false" aria-controls="panel-couleurs" data-panel="couleurs">Couleurs</button>
+    <button class="proto__btn" type="button" aria-expanded="false" aria-controls="panel-seo" data-panel="seo">Infos SEO</button>
+    <button class="proto__btn" type="button" aria-expanded="false" aria-controls="panel-retours" data-panel="retours">Retours <span class="count" data-fb-count hidden>0</span></button>
+    <a class="proto__btn" href="/" style="text-decoration:none">Guide</a>
+  </div>
+
+  <section class="panel" id="panel-couleurs" hidden aria-label="Couleurs de la saison">
+    <div class="panel__in cols">
+      <div>
+        <h2>Une couleur principale, tout le reste en découle</h2>
+        <div class="row" role="group" aria-label="Saisons prédéfinies">
+          {theme.seasons.map((s) => (
+            <button type="button" class="sec swatch" data-season={s.id} data-primary={s.primary} aria-pressed="false"><i style={`background:${s.primary}`}></i>{s.label}</button>
+          ))}
+        </div>
+        <p class="row" style="margin-top:.8rem">
+          <label for="pick" style="margin:0">Couleur libre</label>
+          <input id="pick" type="color" value="#eca06c" data-pick aria-label="Choisir une couleur principale" />
+          <input type="text" value="#eca06c" data-hex size="8" style="width:7rem" aria-label="Valeur hexadécimale" maxlength="7" />
+          <button type="button" class="sec" data-reset>Revenir à la saison par défaut</button>
+        </p>
+      </div>
+      <div>
+        <h2>Contrastes calculés (WCAG AA = 4,5:1 minimum)</h2>
+        <table aria-label="Contrastes"><tbody data-audit></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-seo" hidden aria-label="Informations SEO de la page">
+    <div class="panel__in cols">
+      <dl>
+        <dt>URL (variante {variant.toUpperCase()})</dt><dd>{path}</dd>
+        <dt>Title</dt><dd>{page.title} <small>({page.title.length} car.)</small></dd>
+        <dt>Meta description</dt><dd>{page.description} <small>({page.description.length} car.)</small></dd>
+        <dt>H1 unique</dt><dd>{page.h1}</dd>
+        <dt>Gabarit</dt><dd>{page.template}</dd>
+        <dt>Données structurées prévues</dt><dd>{page.schema?.join(', ') ?? 'aucune'} <small>(non implémentées dans le prototype)</small></dd>
+        <dt>Clics depuis l'accueil</dt><dd>{depth === undefined ? '—' : depth === 0 ? 'accueil' : `${depth} (menu → ${depth === 1 ? 'page' : depth === 2 ? 'hub → page' : 'hub → sous-hub → page'})`}</dd>
+        <dt>Contenu</dt><dd>{sourceLabel}</dd>
+        <dt>Indexation</dt><dd>noindex + robots.txt Disallow + X-Robots-Tag</dd>
+      </dl>
+      <div>
+        <h2>Lire cette page</h2>
+        <p>Chaque page a un seul H1, un title et une meta description uniques, et une URL stable sans saison ni date. Les informations en <span class="tbd" style="background:#44444b">[à compléter]</span> ne sont pas encore fournies par la MGI : rien n'a été inventé.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-retours" hidden aria-label="Laisser un retour sur cette page">
+    <div class="panel__in cols">
+      <div>
+        <h2>Ton retour sur cette page <small style="font-weight:400">(variante {variant.toUpperCase()} · {path})</small></h2>
+        <label for="fb-name">Ton nom (facultatif)</label>
+        <input id="fb-name" type="text" data-fb-name autocomplete="name" />
+        <label for="fb-text" style="margin-top:.6rem">Commentaire</label>
+        <textarea id="fb-text" data-fb-text placeholder="Ce qui te plaît, ce qui manque, ce qui est confus…"></textarea>
+        <p class="row"><button type="button" data-fb-save>Enregistrer</button><span data-fb-status role="status" aria-live="polite"></span></p>
+      </div>
+      <div>
+        <h2>Tous les retours <small style="font-weight:400">(enregistrés dans ce navigateur)</small></h2>
+        <ul class="fb" data-fb-list></ul>
+        <p class="row" style="margin-top:.6rem">
+          <button type="button" data-fb-copy>Copier en Markdown</button>
+          <button type="button" class="sec" data-fb-download>Télécharger .md</button>
+          <button type="button" class="sec" data-fb-clear>Tout effacer</button>
+          {SITE.feedbackFormUrl && <a class="pbtn" href={SITE.feedbackFormUrl} target="_blank" rel="noopener">Formulaire en ligne</a>}
+        </p>
+        <p style="color:#b9b9c2;margin:0">Les retours restent dans ton navigateur : pense à les copier ou télécharger puis à les envoyer.</p>
+      </div>
+    </div>
+  </section>
+</div>

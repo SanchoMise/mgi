@@ -1,0 +1,7 @@
+---
+// Apostrophe MGI : forme seule (monochrome, `currentColor`). Utilisée comme élément graphique et dans les visuels.
+import { APOSTROPHE_PATH, APOSTROPHE_VIEWBOX } from '../assets/apostrophe';
+interface Props { class?: string; decorative?: boolean }
+const { class: cls = '', decorative = true } = Astro.props;
+---
+<svg class={`apostrophe ${cls}`} viewBox={APOSTROPHE_VIEWBOX} fill="currentColor" aria-hidden={decorative ? 'true' : undefined} role={decorative ? undefined : 'img'} xmlns="http://www.w3.org/2000/svg"><path d={APOSTROPHE_PATH} /></svg>

@@ -1,0 +1,15 @@
+---
+import { ancestors } from '../data/variants';
+interface Props { variant: string; id: string; }
+const { variant, id } = Astro.props;
+const chain = ancestors(variant, id);
+---
+{chain.length > 1 && (
+  <nav class="crumbs wrap" aria-label="Fil d'Ariane">
+    <ol>
+      {chain.map((c, i) => (
+        <li>{i === chain.length - 1 ? <span aria-current="page">{c.label}</span> : <a href={c.path}>{i === 0 ? 'Accueil' : c.label}</a>}</li>
+      ))}
+    </ol>
+  </nav>
+)}

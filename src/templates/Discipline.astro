@@ -1,0 +1,15 @@
+---
+import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
+import CardGrid from '../components/CardGrid.astro';
+import Related from '../components/Related.astro';
+import { getPage } from '../data/pages';
+interface Props { variant: string; id: string; }
+const { variant, id } = Astro.props;
+const page = getPage(id);
+---
+<PageHero id={id} />
+<Section title="Selon votre profil">
+  <CardGrid variant={variant} ids={page.cards ?? []} />
+  <div style="margin-top:2rem"><Related variant={variant} ids={page.related} /></div>
+</Section>

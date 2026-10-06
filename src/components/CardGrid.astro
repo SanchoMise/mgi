@@ -1,0 +1,18 @@
+---
+import Apostrophe from './Apostrophe.astro';
+import { pathOf } from '../data/variants';
+import { getPage } from '../data/pages';
+interface Props { variant: string; ids: string[]; }
+const { variant, ids } = Astro.props;
+const items = ids.map((id) => ({ id, href: pathOf(variant, id) })).filter((i) => i.href).map((i) => ({ ...i, page: getPage(i.id) }));
+---
+<div class="grid">
+  {items.map((i, n) => (
+    <a class="card reveal" style={`--i:${n % 6}`} href={i.href}>
+      <Apostrophe />
+      <h3>{i.page.label}</h3>
+      {i.page.lead && <p>{i.page.lead.length > 120 ? i.page.lead.slice(0, 117).replace(/\s\S*$/, '') + '…' : i.page.lead}</p>}
+      <span class="go">Voir <span class="arrow" aria-hidden="true">→</span></span>
+    </a>
+  ))}
+</div>

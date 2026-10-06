@@ -1,0 +1,18 @@
+---
+import { rich } from '../lib/text';
+import type { Session } from '../data/pages';
+interface Props { sessions: Session[]; cta?: { href: string; label: string; external?: boolean } }
+const { sessions, cta } = Astro.props;
+---
+<div class="sessions">
+  {sessions.map((s) => (
+    <div class="session reveal">
+      <div>
+        <h3>{s.label}</h3>
+        <p><strong>{s.dates}</strong></p>
+        {s.details && <p class="muted" set:html={rich(s.details)} />}
+      </div>
+      {cta && <a class="btn btn--sm" href={cta.href} {...(cta.external ? { target: '_blank', rel: 'noopener' } : {})}>{cta.label} <span class="arrow" aria-hidden="true">→</span></a>}
+    </div>
+  ))}
+</div>

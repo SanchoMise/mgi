@@ -1,0 +1,3 @@
+# Prototype d'arborescence : ne pas indexer.
+User-agent: *
+Disallow: /

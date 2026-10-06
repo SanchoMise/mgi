@@ -1,0 +1,13 @@
+---
+import { pathOf } from '../data/variants';
+import { getPage } from '../data/pages';
+interface Props { variant: string; ids?: string[]; title?: string }
+const { variant, ids = [], title = 'Pour aller plus loin' } = Astro.props;
+const items = ids.map((id) => ({ href: pathOf(variant, id), page: getPage(id) })).filter((i) => i.href);
+---
+{items.length > 0 && (
+  <nav class="related" aria-label={title}>
+    <h2 style="font-size:1.1rem">{title}</h2>
+    <ul>{items.map((i) => <li><a href={i.href}>{i.page.label}</a></li>)}</ul>
+  </nav>
+)}

@@ -1,0 +1,11 @@
+---
+// Visuel de remplacement : forme colorée + apostrophe. À remplacer par de vraies photos / vidéos en boucle.
+import Apostrophe from './Apostrophe.astro';
+interface Props { label?: string; tone?: 'primary' | 'secondary' | 'accent' | 'ink'; ratio?: string; class?: string }
+const { label = 'Photo [à fournir]', tone = 'primary', ratio = '4 / 3', class: cls = '' } = Astro.props;
+---
+<figure class={`visual visual--${tone} ${cls}`} style={`aspect-ratio:${ratio}`} role="img" aria-label={label}>
+  <Apostrophe class="visual__shape" />
+  <Apostrophe class="visual__shape visual__shape--2" />
+  <figcaption>{label}</figcaption>
+</figure>

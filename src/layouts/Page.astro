@@ -1,0 +1,37 @@
+---
+import Base from './Base.astro';
+import ProtoBar from '../components/ProtoBar.astro';
+import ProtoScript from '../components/ProtoScript.astro';
+import Header from '../components/Header.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Footer from '../components/Footer.astro';
+import Home from '../templates/Home.astro';
+import Hub from '../templates/Hub.astro';
+import Offer from '../templates/Offer.astro';
+import TextPage from '../templates/TextPage.astro';
+import Lieu from '../templates/Lieu.astro';
+import Contact from '../templates/Contact.astro';
+import Realisation from '../templates/Realisation.astro';
+import Gallery from '../templates/Gallery.astro';
+import Discipline from '../templates/Discipline.astro';
+import { getPage, type Template } from '../data/pages';
+import { pathOf } from '../data/variants';
+
+interface Props { variant: string; id: string; }
+const { variant, id } = Astro.props;
+const page = getPage(id);
+const path = pathOf(variant, id)!;
+const map: Record<Template, any> = {
+  home: Home, hub: Hub, stage: Offer, ecole: Offer, formation: Offer, text: TextPage,
+  lieu: Lieu, contact: Contact, realisation: Realisation, gallery: Gallery, discipline: Discipline,
+};
+const Body = map[page.template];
+---
+<Base title={page.title} description={page.description}>
+  <ProtoBar variant={variant} id={id} path={path} />
+  <Header variant={variant} id={id} />
+  {id !== 'home' && <Breadcrumb variant={variant} id={id} />}
+  <main id="contenu"><Body variant={variant} id={id} /></main>
+  <Footer variant={variant} />
+  <ProtoScript />
+</Base>

@@ -1,0 +1,9 @@
+---
+// Logo MGI en SVG inline : la couleur suit `currentColor` (monochrome), donc il s'adapte à n'importe quel fond.
+import raw from '../assets/logo-mgi.svg?raw';
+interface Props { class?: string; label?: string }
+const { class: cls = '', label = "Maison du Geste et de l'Image" } = Astro.props;
+const viewBox = raw.match(/viewBox="([^"]+)"/)![1];
+const inner = raw.replace(/<\?xml[^>]*\?>/, '').replace(/<svg[^>]*>/, '').replace('</svg>', '');
+---
+<svg class={`logo ${cls}`} viewBox={viewBox} fill="currentColor" role="img" aria-label={label} xmlns="http://www.w3.org/2000/svg" set:html={inner} />

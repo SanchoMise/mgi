@@ -1,0 +1,19 @@
+---
+import PageHero from '../components/PageHero.astro';
+import Related from '../components/Related.astro';
+import { rich } from '../lib/text';
+import { getPage } from '../data/pages';
+interface Props { variant: string; id: string; }
+const { variant, id } = Astro.props;
+const page = getPage(id);
+---
+<PageHero id={id} />
+<section class="section" style="padding-top:0">
+  <div class="wrap two">
+    <div>
+      {page.body?.map((p) => <p set:html={rich(p)} />)}
+      {page.faq && <div style="margin-top:2rem"><h2 style="font-size:1.4rem">Questions fréquentes</h2>{/* FAQPage */}</div>}
+    </div>
+    <aside class="aside"><Related variant={variant} ids={page.related} /></aside>
+  </div>
+</section>

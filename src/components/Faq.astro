@@ -1,0 +1,13 @@
+---
+import { rich } from '../lib/text';
+import type { Faq } from '../data/pages';
+interface Props { items: Faq[]; }
+---
+<div aria-label="Questions fréquentes">
+  {Astro.props.items.map((f) => (
+    <details>
+      <summary>{f.q}</summary>
+      <p set:html={rich(f.a)} />
+    </details>
+  ))}
+</div>

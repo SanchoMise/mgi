@@ -1,0 +1,13 @@
+---
+// Petits blocs communs : titre de section avec animation d'apparition.
+interface Props { title?: string; eyebrow?: string; class?: string; tone?: '' | 'ink' | 'soft' | 'primary' }
+const { title, eyebrow, class: cls = '', tone = '' } = Astro.props;
+const band = { '': '', ink: 'band', soft: 'band band--soft', primary: 'band band--primary' }[tone];
+---
+<section class={`section ${band} ${cls}`}>
+  <div class="wrap">
+    {eyebrow && <p class="eyebrow reveal">{eyebrow}</p>}
+    {title && <h2 class="reveal">{title}</h2>}
+    <slot />
+  </div>
+</section>

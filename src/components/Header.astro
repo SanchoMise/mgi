@@ -1,0 +1,28 @@
+---
+import Logo from './Logo.astro';
+import Apostrophe from './Apostrophe.astro';
+import { mainNav, pathOf, indexVariant } from '../data/variants';
+
+interface Props { variant: string; id: string; }
+const { variant, id } = Astro.props;
+const nav = mainNav(variant);
+const idx = indexVariant(variant);
+// L'entrée de menu « courante » = l'ancêtre de niveau 1 de la page affichée.
+let top = idx.get(id);
+while (top && top.depth > 1) top = idx.get(top.parent!);
+const cta = pathOf(variant, 'tarifs-inscription') ?? pathOf(variant, 'stages-ados') ?? pathOf(variant, 'home')!;
+---
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href={pathOf(variant, 'home')} aria-label="Maison du Geste et de l'Image, accueil">
+      <Logo />
+    </a>
+    <button class="btn btn--ghost btn--sm nav-toggle" type="button" aria-expanded="false" aria-controls="menu" data-nav-toggle>Menu</button>
+    <nav class="nav" id="menu" aria-label="Navigation principale">
+      <ul>
+        {nav.map((e) => <li><a href={e.path} aria-current={top?.id === e.id ? 'page' : undefined}>{e.label}</a></li>)}
+      </ul>
+      <a class="btn btn--sm" href={cta}>S'inscrire <span class="arrow" aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+</header>
