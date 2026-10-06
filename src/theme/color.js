@@ -138,12 +138,12 @@ export function buildPalette(inputHex) {
   const border = oklchToHex({ l: 0.86, c: 0.04, h: H });
 
   // 4. Texte : calculé pour garantir >= 7:1 (AAA) sur le fond, très au-dessus des 4,5:1 requis (AA).
-  const text = ensureContrast({ l: 0.3, c: 0.04, h: H }, bg, 7, 'darker');
-  const textMuted = ensureContrast({ l: 0.48, c: 0.04, h: H }, bg, 4.6, 'darker');
+  const text = ensureContrast({ l: 0.3, c: 0.04, h: H }, surface2, 7, 'darker');
+  const textMuted = ensureContrast({ l: 0.48, c: 0.04, h: H }, surface2, 4.6, 'darker');
 
   // 5. Variantes du primaire lisibles comme texte/lien sur le fond clair (>= 4.5:1).
-  const primaryInk = ensureContrast({ l: Math.min(L, 0.55), c: C, h: H }, bg, 4.5, 'darker');
-  const secondaryInk = ensureContrast(rgbToOklch(hexToRgb(secondary)), bg, 4.5, 'darker');
+  const primaryInk = ensureContrast({ l: Math.min(L, 0.55), c: C, h: H }, surface2, 4.6, 'darker');
+  const secondaryInk = ensureContrast(rgbToOklch(hexToRgb(secondary)), surface2, 4.6, 'darker');
 
   // 6. Nuances claires et foncées du primaire (fonds, survols, bordures).
   const primaryHover = oklchToHex({ l: clamp(p.l + (p.l > 0.6 ? -0.07 : 0.06), 0, 1), c: p.c, h: H });
@@ -185,6 +185,9 @@ export function auditPalette(p) {
     ['texte / fond', p['--color-text'], p['--color-bg'], 4.5],
     ['texte atténué / fond', p['--color-text-muted'], p['--color-bg'], 4.5],
     ['texte / surface', p['--color-text'], p['--color-surface'], 4.5],
+    ['texte atténué / surface foncée', p['--color-text-muted'], p['--color-surface-2'], 4.5],
+    ['lien / surface foncée', p['--color-primary-ink'], p['--color-surface-2'], 4.5],
+    ['lien / bande douce (primary-soft)', p['--color-primary-ink'], p['--color-primary-soft'], 4.5],
     ['texte sur primaire', p['--color-on-primary'], p['--color-primary'], 4.5],
     ['lien (primaire foncé) / fond', p['--color-primary-ink'], p['--color-bg'], 4.5],
     ['texte sur secondaire', p['--color-on-secondary'], p['--color-secondary'], 4.5],
