@@ -1,22 +1,26 @@
 ---
 import Visual from '../components/Visual.astro';
-import Apostrophe from '../components/Apostrophe.astro';
 import Section from '../components/Section.astro';
-import CardGrid from '../components/CardGrid.astro';
 import Sessions from '../components/Sessions.astro';
 import { getPage } from '../data/pages';
-import { pathOf, indexVariant } from '../data/variants';
+import { pathOf } from '../data/variants';
 import { SITE } from '../data/site';
 interface Props { variant: string; id: string; }
 const { variant, id } = Astro.props;
 const page = getPage(id);
-const has = (i: string) => indexVariant(variant).has(i);
 const toussaint = getPage('stages-ados').sessions![0];
-const paths = [
-  { id: 'stages-ados', who: 'Je suis parent ou ado', text: 'Stages de vacances, ateliers du samedi, dates et inscription.' },
-  { id: 'ecoles', who: 'Je suis enseignant·e', text: 'Monter un parcours artistique avec votre classe, voir des réalisations.' },
-  { id: 'formations', who: 'Je suis professionnel·le', text: 'Formations 2026-2027 pour animateur·rices, médiateur·rices, artistes.' },
-].filter((p) => has(p.id));
+const cols = [
+  { key: 'ado', id: 'stages-ados', cls: 'pub--ado', kicker: 'Je suis', who: 'Parent ou ado' },
+  { key: 'ecole', id: 'ecoles', cls: 'pub--ecole', kicker: 'Je suis', who: 'Enseignant·e' },
+  { key: 'pro', id: 'formations', cls: 'pub--pro', kicker: 'Je suis', who: 'Professionnel·le' },
+];
+const L = (id: string, label: string) => ({ id, label });
+const rows = [
+  { name: 'Photo', cells: { ado: [L('stage-photo', 'Stage photo ados')], ecole: [L('ateliers-classe', 'Photo en classe')], pro: [L('formation-cyanotype', 'Le Cyanotype'), L('formation-stenope', 'Le Sténopé')] } },
+  { name: 'Vidéo', cells: { ado: [L('stage-video', 'Stage vidéo ados')], ecole: [L('ateliers-classe', 'Vidéo en classe')], pro: [L('formation-cinema-animation', "Cinéma d'animation"), L('formation-realisation-audiovisuelle', 'Réalisation audiovisuelle')] } },
+  { name: 'Théâtre', cells: { ado: [L('stage-theatre', 'Stage théâtre ados'), L('samedis', 'Ateliers du samedi')], ecole: [L('ateliers-classe', 'Théâtre en classe')], pro: [L('formation-oral-aisance-impact', "Aisance à l'oral"), L('formation-theatre-3-6-ans-album', 'Théâtre 3-6 ans')] } },
+  { name: 'Son et danse', cells: { ado: [], ecole: [], pro: [L('formation-creation-sonore', 'Création sonore'), L('formation-mouvement-danse', 'Mouvement et danse')] } },
+];
 ---
 <section class="hero">
   <div class="wrap hero__grid">
@@ -35,24 +39,42 @@ const paths = [
   </div>
 </section>
 
-<!-- Entrées par parcours : vrais liens HTML, pas de choix mémorisé, pas d'interstitiel. -->
-<Section title="Par où commencer ?" eyebrow="Choisissez votre parcours">
-  <div class="grid grid--3">
-    {paths.map((p, n) => (
-      <a class={`card card--path is-${n + 1} reveal`} style={`--i:${n}`} href={pathOf(variant, p.id)}>
-        <Apostrophe />
-        <h3>{p.who}</h3>
-        <p>{p.text}</p>
-        <span class="go">Entrer <span class="arrow" aria-hidden="true">→</span></span>
-      </a>
-    ))}
+<div class="marquee" aria-hidden="true"><div class="marquee__track"><span>Photo</span><span>Vidéo</span><span>Théâtre</span><span>Son</span><span>Danse</span><span>Photo</span><span>Vidéo</span><span>Théâtre</span><span>Son</span><span>Danse</span><span>Photo</span><span>Vidéo</span><span>Théâtre</span><span>Son</span><span>Danse</span></div></div>
+
+<!-- Matrice : l'hybride rendu visible. Colonnes = parcours par public (hubs). Lignes = disciplines transversales. -->
+<section class="section" aria-labelledby="matrice">
+  <div class="wrap">
+    <p class="eyebrow reveal">Variante C · hybride</p>
+    <h2 id="matrice" class="reveal">Trois parcours, toutes les disciplines</h2>
+    <p class="lead reveal">Entrez par votre profil (en-têtes de colonne) ou directement par la discipline qui vous intéresse (cellules).</p>
+    <table class="matrix reveal">
+      <thead>
+        <tr>
+          <td></td>
+          {cols.map((c) => (
+            <th scope="col" class={c.cls}><a href={pathOf(variant, c.id)}><small>{c.kicker}</small><span>{c.who}</span><b aria-hidden="true">→</b></a></th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <th scope="row">{r.name}</th>
+            {cols.map((c) => (
+              <td data-label={c.who}>
+                {r.cells[c.key].length === 0 ? <span class="matrix__none">—</span> : r.cells[c.key].map((cell) => <a href={pathOf(variant, cell.id)}>{cell.label}</a>)}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="muted" style="margin-top:1rem">Les pages sont les mêmes que dans le menu : les disciplines servent le référencement (« stage photo ados Paris »), les parcours servent le visiteur.</p>
   </div>
-  <p class="muted" style="margin-top:1.25rem">Ces trois accès sont de simples liens : ils n'enferment pas dans un parcours, tout le site reste accessible depuis le menu.</p>
-</Section>
+</section>
 
 <Section tone="soft" title="Prochains stages ados" eyebrow="12-16 ans">
   <Sessions sessions={[toussaint]} cta={{ href: pathOf(variant, 'stages-ados')!, label: 'Voir les stages' }} />
-  <div style="margin-top:1.5rem"><CardGrid variant={variant} ids={['stage-photo', 'stage-video', 'stage-theatre']} /></div>
 </Section>
 
 <section class="section band">

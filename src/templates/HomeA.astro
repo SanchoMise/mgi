@@ -1,46 +1,53 @@
 ---
-// Variante A : l'accueil est un HUB PAR PUBLIC. Quatre grandes portes, et rien d'autre en vedette.
+// VARIANTE A — PAR PUBLIC. L'accueil est un hub : quatre grands panneaux, un par visiteur.
+// Au survol (ou au focus clavier), un panneau s'ouvre et montre ses sous-pages. Aucune discipline en vedette.
 import Apostrophe from '../components/Apostrophe.astro';
-import Visual from '../components/Visual.astro';
 import Section from '../components/Section.astro';
+import Sessions from '../components/Sessions.astro';
 import { getPage } from '../data/pages';
 import { pathOf, childrenOf } from '../data/variants';
 interface Props { variant: string; id: string; }
 const { variant, id } = Astro.props;
 const page = getPage(id);
 const doors = [
-  { id: 'stages-ados', n: '1', who: 'Parents et ados', text: 'Trouver un stage pendant les vacances ou les samedis, voir les dates, s\'inscrire.' },
-  { id: 'ecoles', n: '2', who: 'Enseignants et écoles', text: 'Monter un parcours artistique avec votre classe, découvrir des réalisations.' },
-  { id: 'formations', n: '3', who: 'Professionnels', text: 'Formations, accueil de tournages, résidences d\'artistes.' },
-  { id: 'maison', n: '4', who: 'La Maison', text: 'Qui nous sommes, l\'équipe, les partenaires, la presse, le lieu et le contact.' },
+  { id: 'stages-ados', cls: 'pub--ado', who: 'Parents et ados', text: "Un stage pendant les vacances ou les samedis, les dates, l'inscription." },
+  { id: 'ecoles', cls: 'pub--ecole', who: 'Enseignants et écoles', text: 'Un parcours artistique avec votre classe, des réalisations à voir.' },
+  { id: 'formations', cls: 'pub--pro', who: 'Professionnels', text: "Formations, accueil de tournages, résidences d'artistes." },
+  { id: 'maison', cls: 'pub--maison', who: 'La Maison', text: "Qui nous sommes, l'équipe, les partenaires, la presse, le lieu." },
 ];
+const hidden = ['real-cines', 'real-etranges'];
+const kids = (id: string) => childrenOf(variant, id).filter((c) => !c.id.startsWith('formation-') && !hidden.includes(c.id)).slice(0, 6);
+const toussaint = getPage('stages-ados').sessions![0];
 ---
-<section class="hero">
-  <div class="wrap">
-    <p class="eyebrow reveal">Maison du Geste et de l'Image · Paris 1er</p>
-    <h1 class="reveal" style="--i:1;max-width:20ch">{page.h1}</h1>
-    <p class="lead reveal" style="--i:2">Qui êtes-vous ? Choisissez votre porte d'entrée : chaque public a son propre espace.</p>
-  </div>
+<section class="a-intro wrap">
+  <p class="eyebrow reveal">Maison du Geste et de l'Image · Paris 1er</p>
+  <h1 class="reveal" style="--i:1">{page.h1}</h1>
+  <p class="lead reveal" style="--i:2"><strong>Qui êtes-vous ?</strong> Chaque public a son espace. Survolez un panneau pour l'ouvrir.</p>
 </section>
-<section class="section" style="padding-top:0">
-  <div class="wrap doors">
-    {doors.map((d, n) => (
-      <article class={`door door--${n + 1} reveal`} style={`--i:${n}`}>
-        <Apostrophe />
-        <p class="door__n">{d.n}</p>
-        <h2><a class="door__link" href={pathOf(variant, d.id)}>{d.who}</a></h2>
+
+<section class="a-panels" aria-label="Choisir son espace">
+  {doors.map((d, n) => (
+    <article class={`a-panel ${d.cls}`}>
+      <Apostrophe />
+      <a class="a-panel__main" href={pathOf(variant, d.id)}>
+        <span class="a-panel__n">0{n + 1}</span>
+        <h2>{d.who}</h2>
         <p>{d.text}</p>
-        <ul>
-          {childrenOf(variant, d.id).filter((c) => !c.id.startsWith('formation-') && !['real-cines', 'real-etranges'].includes(c.id)).slice(0, 5).map((c) => <li><a href={c.path}>{c.label}</a></li>)}
-          {d.id === 'formations' && <li><a href={pathOf(variant, 'formations')}>8 formations 2026-2027</a></li>}
-        </ul>
-      </article>
-    ))}
-  </div>
+        <span class="a-panel__go" aria-hidden="true">Entrer →</span>
+      </a>
+      <ul class="a-panel__links">
+        {kids(d.id).map((c) => <li><a href={c.path}>{c.label}</a></li>)}
+        {d.id === 'formations' && <li><a href={pathOf(variant, 'formations')}>Les 8 formations 2026-2027</a></li>}
+      </ul>
+    </article>
+  ))}
 </section>
-<Section tone="soft" title="Une maison, plusieurs entrées">
-  <div class="two">
-    <p class="lead">En variante A, aucune discipline ni aucune offre n'est mise en vedette sur l'accueil : le visiteur choisit d'abord <em>qui il est</em>, puis découvre l'offre qui lui correspond.</p>
-    <Visual tone="secondary" ratio="16 / 9" label="Photo du lieu [à fournir]" />
+
+<Section tone="soft" title="La MGI en bref" eyebrow="Chiffres du site actuel">
+  <div class="stats">
+    <div class="stat reveal"><strong>1 200 m²</strong><span>dédiés à la pratique, sur trois niveaux</span></div>
+    <div class="stat reveal" style="--i:1"><strong>~5 000</strong><span>enfants et ados par an pendant le temps scolaire</span></div>
+    <div class="stat reveal" style="--i:2"><strong>40 ans</strong><span>de parcours artistiques avec les classes</span></div>
   </div>
+  <div style="margin-top:2rem"><Sessions sessions={[toussaint]} cta={{ href: pathOf(variant, 'stages-ados')!, label: 'Voir les stages' }} /></div>
 </Section>

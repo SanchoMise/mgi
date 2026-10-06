@@ -136,6 +136,13 @@ function initPage() {
     });
   }));
 
+  /* ---- accueil B : filtre « Je suis… » ---- */
+  const bRows = document.querySelector<HTMLElement>('[data-brows]');
+  document.querySelectorAll<HTMLButtonElement>('[data-bfilter]').forEach((b, _i, all) => b.addEventListener('click', () => {
+    all.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    if (b.dataset.bfilter) bRows?.setAttribute('data-filter', b.dataset.bfilter); else bRows?.removeAttribute('data-filter');
+  }));
+
   /* ---- apparition au défilement ---- */
   const els = document.querySelectorAll<HTMLElement>('.reveal');
   if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { els.forEach((e) => e.classList.add('in')); return; }

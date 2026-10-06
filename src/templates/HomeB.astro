@@ -1,50 +1,79 @@
 ---
-// Variante B : l'accueil est organisé PAR DISCIPLINE. De grandes bandes typographiques, une par discipline.
+// VARIANTE B — PAR DISCIPLINE. L'accueil est un index typographique : une rangée géante par discipline.
+// Un filtre « Je suis… » met en avant, dans chaque rangée, les liens du public choisi (filtres par public de la variante B).
+import Apostrophe from '../components/Apostrophe.astro';
 import Section from '../components/Section.astro';
-import Sessions from '../components/Sessions.astro';
-import CardGrid from '../components/CardGrid.astro';
 import { getPage } from '../data/pages';
 import { pathOf, indexVariant } from '../data/variants';
 interface Props { variant: string; id: string; }
 const { variant, id } = Astro.props;
 const page = getPage(id);
 const idx = indexVariant(variant);
-const discs = [
-  { id: 'disc-photo', name: 'Photo', stage: 'stage-photo', forms: ['formation-cyanotype', 'formation-stenope'] },
-  { id: 'disc-video', name: 'Vidéo', stage: 'stage-video', forms: ['formation-cinema-animation', 'formation-realisation-audiovisuelle'] },
-  { id: 'disc-theatre', name: 'Théâtre', stage: 'stage-theatre', forms: ['formation-oral-aisance-impact', 'formation-theatre-3-6-ans-album'] },
+const rows = [
+  { id: 'disc-photo', name: 'Photo', stage: 'stage-photo', forms: ['formation-cyanotype', 'formation-stenope'], real: true },
+  { id: 'disc-video', name: 'Vidéo', stage: 'stage-video', forms: ['formation-cinema-animation', 'formation-realisation-audiovisuelle'], real: true },
+  { id: 'disc-theatre', name: 'Théâtre', stage: 'stage-theatre', forms: ['formation-oral-aisance-impact', 'formation-theatre-3-6-ans-album'], real: true },
+  { id: 'disc-son', name: 'Son', stage: '', forms: ['formation-creation-sonore'], real: false },
+  { id: 'disc-danse', name: 'Danse', stage: '', forms: ['formation-mouvement-danse'], real: false },
 ];
-const toussaint = getPage('stages-ados').sessions![0];
+const agenda = [
+  { d: '19-23', m: 'oct.', t: 'Stages de la Toussaint, 12-16 ans', id: 'stages-ados', cls: 'pub--ado' },
+  { d: '30', m: 'oct.', t: "France Jolly : sortie de résidence (théâtre)", id: 'agenda', cls: 'pub--pro' },
+  { d: '3', m: 'déc.', t: 'Contrechamps, Clara Baum : carte blanche vidéo', id: 'agenda', cls: 'pub--pro' },
+  { d: '14-18', m: 'déc.', t: 'Stage de 3e : découverte des métiers', id: 'stage-3e', cls: 'pub--ado' },
+];
 ---
-<section class="hero">
-  <div class="wrap">
-    <p class="eyebrow reveal">Maison du Geste et de l'Image · Paris 1er</p>
-    <h1 class="reveal" style="--i:1;max-width:20ch">{page.h1}</h1>
-    <p class="lead reveal" style="--i:2">Qu'est-ce que vous avez envie de faire ? Chaque discipline réunit les stages ados, les formations et les ateliers en classe.</p>
+<section class="b-head wrap">
+  <p class="eyebrow reveal">Maison du Geste et de l'Image · Paris 1er</p>
+  <h1 class="reveal" style="--i:1">{page.h1}</h1>
+  <p class="lead reveal" style="--i:2"><strong>Qu'avez-vous envie de faire ?</strong> Choisissez une discipline : stages, formations et ateliers en classe sont réunis dans chaque rangée.</p>
+  <div class="b-filter reveal" style="--i:3" role="group" aria-label="Je suis…">
+    <span>Je suis</span>
+    <button type="button" aria-pressed="true" data-bfilter="">Tout le monde</button>
+    <button type="button" aria-pressed="false" data-bfilter="ado" class="pub--ado">Parent ou ado</button>
+    <button type="button" aria-pressed="false" data-bfilter="ecole" class="pub--ecole">Enseignant·e</button>
+    <button type="button" aria-pressed="false" data-bfilter="pro" class="pub--pro">Professionnel·le</button>
   </div>
 </section>
-<section class="section" style="padding-top:0">
-  <div class="wrap bands">
-    {discs.map((d, n) => (
-      <div class={`dband dband--${n + 1} reveal`} style={`--i:${n}`}>
-        <a class="dband__name" href={pathOf(variant, d.id)}>{d.name}<span class="arrow" aria-hidden="true">→</span></a>
-        <ul class="dband__links">
-          <li><a href={pathOf(variant, d.stage)}>Stage ados 12-16 ans</a></li>
-          {d.forms.filter((f) => idx.has(f)).map((f) => <li><a href={pathOf(variant, f)}>Formation : {getPage(f).label}</a></li>)}
-          <li><a href={pathOf(variant, 'ateliers-classe')}>Atelier en classe</a></li>
-        </ul>
-      </div>
+
+<section class="b-rows" data-brows aria-label="Disciplines">
+  {rows.map((r, n) => (
+    <div class={`b-row ${r.real ? '' : 'b-row--small'}`}>
+      <a class="b-row__name" href={pathOf(variant, r.id)}>{r.name}<span class="arrow" aria-hidden="true">→</span></a>
+      <ul class="b-row__links">
+        {r.stage && <li data-public="ado"><a class="pub--ado" href={pathOf(variant, r.stage)}>Stage ados 12-16 ans</a></li>}
+        {r.real && <li data-public="ecole"><a class="pub--ecole" href={pathOf(variant, 'ateliers-classe')}>Atelier en classe</a></li>}
+        {r.forms.filter((f) => idx.has(f)).map((f) => <li data-public="pro"><a class="pub--pro" href={pathOf(variant, f)}>Formation : {getPage(f).label}</a></li>)}
+        {!r.real && <li><em class="tbd">[offre à confirmer]</em></li>}
+      </ul>
+      <Apostrophe />
+    </div>
+  ))}
+</section>
+
+<Section title="Calendrier" eyebrow="Les prochaines dates">
+  <ol class="timeline">
+    {agenda.map((a, n) => (
+      <li class="reveal" style={`--i:${n}`}>
+        <a class={`timeline__date ${a.cls}`} href={pathOf(variant, a.id)}><strong>{a.d}</strong><span>{a.m}</span></a>
+        <p>{a.t}</p>
+      </li>
     ))}
-  </div>
-  <div class="wrap" style="margin-top:1.25rem;display:flex;gap:1rem;flex-wrap:wrap">
-    <a class="chip" href={pathOf(variant, 'disc-son')}>Son</a>
-    <a class="chip" href={pathOf(variant, 'disc-danse')}>Danse</a>
-    <span class="muted">Offres à confirmer</span>
+  </ol>
+  <p><a class="btn btn--ghost" href={pathOf(variant, 'stages-ados')}>Tout le calendrier des stages <span class="arrow" aria-hidden="true">→</span></a></p>
+</Section>
+
+<section class="section band" style="margin-top:0">
+  <div class="wrap two">
+    <div>
+      <p class="eyebrow">Autre façon d'entrer</p>
+      <h2>Vous n'avez pas de discipline en tête ?</h2>
+      <p class="lead">Les offres sont aussi classées par profil.</p>
+    </div>
+    <div style="display:grid;gap:.75rem">
+      <a class="btn" href={pathOf(variant, 'stages-ados')}>Parents et ados</a>
+      <a class="btn" href={pathOf(variant, 'ecoles')}>Enseignants et écoles</a>
+      <a class="btn" href={pathOf(variant, 'formations')}>Professionnels : formations</a>
+    </div>
   </div>
 </section>
-<Section tone="soft" title="Prochaines dates" eyebrow="Calendrier des stages">
-  <Sessions sessions={[toussaint]} cta={{ href: pathOf(variant, 'stages-ados')!, label: 'Tout le calendrier' }} />
-</Section>
-<Section title="Par profil">
-  <div class="grid grid--3"><CardGrid variant={variant} ids={['stages-ados', 'ecoles', 'formations']} /></div>
-</Section>
