@@ -2,6 +2,7 @@
 // VARIANTE C — HYBRIDE. Un hub par public (trois grandes cartes de parcours qui s'empilent au défilement),
 // et à l'intérieur de chaque parcours, des tuiles par discipline : ce sont les pages /stages-ados/photo/, etc.
 import Apostrophe from '../components/Apostrophe.astro';
+import Apostrophe from '../components/Apostrophe.astro';
 import Visual from '../components/Visual.astro';
 import Section from '../components/Section.astro';
 import { getPage } from '../data/pages';
@@ -59,7 +60,13 @@ const parcours = [
   </div>
 </section>
 
-<div class="marquee" aria-hidden="true"><div class="marquee__track"><span>Photo</span><span>Vidéo</span><span>Théâtre</span><span>Son</span><span>Danse</span><span>Photo</span><span>Vidéo</span><span>Théâtre</span><span>Son</span><span>Danse</span><span>Photo</span><span>Vidéo</span><span>Théâtre</span><span>Son</span><span>Danse</span></div></div>
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee">
+    <div class="marquee__track">
+      {[0, 1, 2].map(() => ['Photo', 'Vidéo', 'Théâtre', 'Son', 'Danse'].map((w) => (<><span>{w}</span><Apostrophe class="marquee__apos" /></>)))}
+    </div>
+  </div>
+</div>
 
 <!-- Trois parcours : cartes qui s'empilent (position: sticky). Les tuiles sont des liens vers les pages disciplines. -->
 <section class="section" aria-labelledby="parcours-titre">

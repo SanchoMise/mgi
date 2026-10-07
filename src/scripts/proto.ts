@@ -118,6 +118,8 @@ export function initProto() {
 
 }
 
+let tiltHandler: (() => void) | null = null;
+
 function initPage() {
   /* ---- menu mobile ---- */
   const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
@@ -142,6 +144,25 @@ function initPage() {
     all.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     if (b.dataset.bfilter) bRows?.setAttribute('data-filter', b.dataset.bfilter); else bRows?.removeAttribute('data-filter');
   }));
+
+  /* ---- accueil C : le bandeau change d'orientation pendant le défilement ----
+     En bas de l'écran il penche d'un côté, à mi-hauteur il est à plat, en haut il penche de l'autre. */
+  const band = document.querySelector<HTMLElement>('.marquee');
+  if (tiltHandler) { window.removeEventListener('scroll', tiltHandler); window.removeEventListener('resize', tiltHandler); tiltHandler = null; }
+  if (band && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const MAX = 4; // degrés
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = band.getBoundingClientRect();
+      const t = Math.min(1, Math.max(0, (r.top + r.height / 2) / window.innerHeight)); // 1 = bas de l'écran, 0 = haut
+      band.style.setProperty('--tilt', ((0.5 - t) * 2 * MAX).toFixed(2) + 'deg');
+    };
+    tiltHandler = () => { if (!raf) raf = requestAnimationFrame(update); };
+    window.addEventListener('scroll', tiltHandler, { passive: true });
+    window.addEventListener('resize', tiltHandler, { passive: true });
+    update();
+  }
 
   /* ---- apparition au défilement ---- */
   const els = document.querySelectorAll<HTMLElement>('.reveal');

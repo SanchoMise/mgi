@@ -333,9 +333,11 @@ details[open] summary { color: var(--color-primary-ink); }
 .timeline__date span { font-weight: 600; margin-top: .25rem; }
 
 /* ========= Accueil C — matrice parcours × disciplines + bandeau ========= */
-.marquee { overflow: hidden; background: var(--color-ink); color: var(--color-on-ink); padding-block: .9rem; }
-.marquee__track { display: flex; gap: 3rem; width: max-content; animation: marquee 28s linear infinite; font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.6rem); text-transform: uppercase; letter-spacing: .02em; }
-.marquee__track span::after { content: '’'; margin-left: 3rem; color: var(--color-ink-accent); }
+/* Bandeau en biais : incliné, avec une grande apostrophe centrée dans la hauteur du bandeau */
+.marquee-wrap { overflow: hidden; padding-block: clamp(1.75rem, 4vw, 3rem); }
+.marquee { width: 108%; margin-left: -4%; transform: rotate(var(--tilt, -2.2deg)); overflow: hidden; background: var(--color-ink); color: var(--color-on-ink); padding-block: .5rem; box-shadow: var(--shadow); }
+.marquee__track { display: flex; align-items: center; gap: clamp(1.5rem, 3.5vw, 3rem); width: max-content; animation: marquee 32s linear infinite; font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.8rem); line-height: 1; text-transform: uppercase; letter-spacing: .02em; }
+.marquee__apos { height: clamp(3.6rem, 8.5vw, 6.2rem); width: auto; flex: none; color: var(--color-ink-accent); }
 @keyframes marquee { to { transform: translateX(-33.333%); } }
 .marquee:hover .marquee__track { animation-play-state: paused; }
 .b-filter button.pub--ado { background: var(--color-primary); color: var(--color-on-primary); }
