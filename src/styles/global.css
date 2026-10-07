@@ -334,7 +334,7 @@ details[open] summary { color: var(--color-primary-ink); }
 
 /* ========= Accueil C — matrice parcours × disciplines + bandeau ========= */
 /* Bandeau en biais : incliné, avec une grande apostrophe centrée dans la hauteur du bandeau */
-.marquee-wrap { overflow: hidden; padding-block: clamp(1.75rem, 4vw, 3rem); }
+.marquee-wrap { overflow-x: clip; overflow-y: visible; padding-block: clamp(3.5rem, 7vw, 5.5rem); } /* assez de marge pour les extrémités inclinées (±4°) ; seul le débord horizontal est coupé */
 .marquee { width: 108%; margin-left: -4%; transform: rotate(var(--tilt, -2.2deg)); overflow: hidden; background: var(--color-ink); color: var(--color-on-ink); padding-block: .5rem; box-shadow: var(--shadow); }
 .marquee__track { display: flex; align-items: center; gap: clamp(1.5rem, 3.5vw, 3rem); width: max-content; animation: marquee 32s linear infinite; font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.8rem); line-height: 1; text-transform: uppercase; letter-spacing: .02em; }
 .marquee__apos { height: clamp(3.6rem, 8.5vw, 6.2rem); width: auto; flex: none; color: var(--color-ink-accent); }
