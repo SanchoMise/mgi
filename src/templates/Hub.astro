@@ -16,4 +16,4 @@ const ids = page.cards ?? childrenOf(variant, id).map((c) => c.id);
   {page.sessions && <Sessions sessions={page.sessions} />}
   <div style={page.sessions ? 'margin-top:2rem' : ''}><CardGrid variant={variant} ids={ids} /></div>
 </Section>
-<section class="section" style="padding-top:0"><div class="wrap"><Related variant={variant} ids={page.related} /></div></section>
+<Related variant={variant} ids={page.related} />

@@ -41,7 +41,7 @@ const tone = page.discipline === 'video' ? 'secondary' : page.discipline === 'th
       <a class="btn" href={cta.href} {...(cta.external ? { target: '_blank', rel: 'noopener' } : {})}>{cta.label} <span class="arrow" aria-hidden="true">→</span></a>
       <p class="note" set:html={rich(cta.note)} />
       {page.template === 'stage' && tarifs && <a href={tarifs}>Tarifs et modalités d'inscription</a>}
-      <Related variant={variant} ids={page.related} />
     </aside>
   </div>
 </section>
+<Related variant={variant} ids={page.related} />

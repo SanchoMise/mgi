@@ -9,7 +9,7 @@ const page = getPage(id);
 ---
 <PageHero id={id} />
 <section class="section" style="padding-top:0">
-  <div class="wrap two">
+  <div class="wrap prose">
     <div>
       <div class="card" style="min-height:0">
         <h2 style="font-size:1.4rem">Nous joindre</h2>
@@ -20,6 +20,6 @@ const page = getPage(id);
       </div>
       <p class="note" style="margin-top:1rem">Formulaire de contact : <em class="tbd">[à intégrer côté WordPress]</em> (aucun envoi dans ce prototype).</p>
     </div>
-    <aside class="aside"><Related variant={variant} ids={page.related} /></aside>
   </div>
 </section>
+<Related variant={variant} ids={page.related} />

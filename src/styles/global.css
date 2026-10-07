@@ -163,8 +163,6 @@ details[open] summary { color: var(--color-primary-ink); }
 .two { display: grid; gap: clamp(1.5rem, 4vw, 3.5rem); grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); align-items: start; }
 @media (max-width: 52rem) { .two { grid-template-columns: 1fr; } }
 .aside { position: sticky; top: 6rem; display: grid; gap: 1rem; }
-.related ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .4rem; }
-.related a { font-weight: 600; }
 .note { border: 2px dashed var(--color-border); border-radius: var(--radius-sm); padding: .75rem 1rem; font-size: .92rem; color: var(--color-text-muted); }
 
 /* ========= Galerie ========= */
@@ -380,3 +378,12 @@ main.is-home { padding-top: 4.6rem; }
   main.is-home { padding-top: 3.2rem; }
 }
 @media (max-width: 30rem) { .site-header[data-home]:not(.is-scrolled) .logo { transform: scale(1.8); } main.is-home { padding-top: 2.4rem; } }
+
+/* ========= « Pour aller plus loin » : toujours sous le contenu, pleine largeur ========= */
+.related-band { background: var(--color-surface); color: var(--color-text); padding-block: clamp(1.75rem, 4vw, 2.75rem); margin-top: clamp(1.5rem, 4vw, 3rem); border-top: 1px solid var(--color-border); }
+.related-band h2 { font-size: clamp(1.3rem, 2.4vw, 1.7rem); margin-bottom: 1rem; }
+.related-band ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
+.related-band a { display: inline-block; padding: .5rem 1rem; border-radius: 999px; background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text); font-weight: 600; text-decoration: none; transition: transform .25s var(--ease), border-color .25s, background-color var(--theme-speed); }
+.related-band a:hover { transform: translateY(-2px); border-color: var(--color-primary); }
+.prose { max-width: 46rem; margin-left: max(var(--gutter), calc((100% - var(--maxw)) / 2)); margin-right: auto; }
+.related-band a span { margin-left: .35rem; }

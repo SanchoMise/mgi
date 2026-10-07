@@ -39,6 +39,6 @@ const discs = [...new Set(items.map((i) => i.disc).filter((d) => !d.startsWith('
       })}
     </div>
     <p class="note" style="margin-top:1.5rem">Dans le site final : une galerie filtrable (public, discipline, année) remplace les fiches /portfolio/ ; seules les plus fortes restent indexées.</p>
-    <div style="margin-top:2rem"><Related variant={variant} ids={page.related} /></div>
   </div>
 </section>
+<Related variant={variant} ids={page.related} />

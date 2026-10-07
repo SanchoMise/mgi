@@ -10,11 +10,11 @@ const page = getPage(id);
 ---
 <PageHero id={id} />
 <section class="section" style="padding-top:0">
-  <div class="wrap two">
+  <div class="wrap">
     <div>
       <Visual tone="secondary" ratio="16 / 9" label="Photo ou extrait vidéo [à fournir]" />
       <div style="margin-top:1.5rem">{page.body?.map((p) => <p set:html={rich(p)} />)}</div>
     </div>
-    <aside class="aside"><Related variant={variant} ids={page.related} title="Dans le même esprit" /></aside>
   </div>
 </section>
+<Related variant={variant} ids={page.related} />

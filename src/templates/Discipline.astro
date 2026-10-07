@@ -11,5 +11,5 @@ const page = getPage(id);
 <PageHero id={id} />
 <Section title="Selon votre profil">
   <CardGrid variant={variant} ids={page.cards ?? []} />
-  <div style="margin-top:2rem"><Related variant={variant} ids={page.related} /></div>
 </Section>
+<Related variant={variant} ids={page.related} />
