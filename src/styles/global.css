@@ -39,7 +39,8 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.5rem); margin-top: 0; }
 h3 { font-size: 1.35rem; }
 p { margin: 0 0 1em; text-wrap: pretty; }
 a { color: var(--color-primary-ink); text-underline-offset: .2em; text-decoration-thickness: .08em; }
-a:hover { color: var(--color-text); }
+a:hover { text-decoration-thickness: .16em; }
+a:not([class]):hover { color: var(--color-text); } /* seuls les liens simples changent de couleur : jamais ceux posés sur un fond coloré */
 :focus-visible { outline: 3px solid var(--color-text); outline-offset: 3px; border-radius: 4px; }
 .skip { position: absolute; left: 1rem; top: -4rem; background: var(--color-text); color: var(--color-bg); padding: .6rem 1rem; border-radius: var(--radius-sm); z-index: 100; }
 .skip:focus { top: 1rem; }
