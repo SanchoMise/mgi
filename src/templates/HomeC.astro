@@ -1,25 +1,45 @@
 ---
+// VARIANTE C — HYBRIDE. Un hub par public (trois grandes cartes de parcours qui s'empilent au défilement),
+// et à l'intérieur de chaque parcours, des tuiles par discipline : ce sont les pages /stages-ados/photo/, etc.
+import Apostrophe from '../components/Apostrophe.astro';
 import Visual from '../components/Visual.astro';
 import Section from '../components/Section.astro';
-import Sessions from '../components/Sessions.astro';
 import { getPage } from '../data/pages';
 import { pathOf } from '../data/variants';
 import { SITE } from '../data/site';
 interface Props { variant: string; id: string; }
 const { variant, id } = Astro.props;
 const page = getPage(id);
-const toussaint = getPage('stages-ados').sessions![0];
-const cols = [
-  { key: 'ado', id: 'stages-ados', cls: 'pub--ado', kicker: 'Je suis', who: 'Parent ou ado' },
-  { key: 'ecole', id: 'ecoles', cls: 'pub--ecole', kicker: 'Je suis', who: 'Enseignant·e' },
-  { key: 'pro', id: 'formations', cls: 'pub--pro', kicker: 'Je suis', who: 'Professionnel·le' },
-];
-const L = (id: string, label: string) => ({ id, label });
-const rows = [
-  { name: 'Photo', cells: { ado: [L('stage-photo', 'Stage photo ados')], ecole: [L('ateliers-classe', 'Photo en classe')], pro: [L('formation-cyanotype', 'Le Cyanotype'), L('formation-stenope', 'Le Sténopé')] } },
-  { name: 'Vidéo', cells: { ado: [L('stage-video', 'Stage vidéo ados')], ecole: [L('ateliers-classe', 'Vidéo en classe')], pro: [L('formation-cinema-animation', "Cinéma d'animation"), L('formation-realisation-audiovisuelle', 'Réalisation audiovisuelle')] } },
-  { name: 'Théâtre', cells: { ado: [L('stage-theatre', 'Stage théâtre ados'), L('samedis', 'Ateliers du samedi')], ecole: [L('ateliers-classe', 'Théâtre en classe')], pro: [L('formation-oral-aisance-impact', "Aisance à l'oral"), L('formation-theatre-3-6-ans-album', 'Théâtre 3-6 ans')] } },
-  { name: 'Son et danse', cells: { ado: [], ecole: [], pro: [L('formation-creation-sonore', 'Création sonore'), L('formation-mouvement-danse', 'Mouvement et danse')] } },
+const parcours = [
+  {
+    cls: 'pub--ado', kicker: 'Je suis parent ou ado', title: 'Trouver un stage', hub: 'stages-ados', cta: 'Tous les stages',
+    text: 'Stages pendant les vacances (12-16 ans) et ateliers du samedi : théâtre, photo, vidéo. Prochain rendez-vous : les vacances de la Toussaint, du 19 au 23 octobre 2026.',
+    tiles: [
+      { id: 'stage-photo', name: 'Photo', sub: 'Stage ados · 12-16 ans' },
+      { id: 'stage-video', name: 'Vidéo', sub: 'Stage ados · 12-16 ans' },
+      { id: 'stage-theatre', name: 'Théâtre', sub: 'Stage ados · 12-16 ans' },
+      { id: 'samedis', name: 'Samedis', sub: 'Écriture, théâtre, vidéo' },
+    ],
+  },
+  {
+    cls: 'pub--ecole', kicker: 'Je suis enseignant·e', title: 'Monter un parcours avec ma classe', hub: 'ecoles', cta: 'Tout pour les écoles',
+    text: "De la maternelle à la terminale : un parcours sur mesure en théâtre, vidéo ou photographie, construit avec vous et un·e artiste.",
+    tiles: [
+      { id: 'ateliers-classe', name: 'En classe', sub: "Ateliers : mode d'emploi" },
+      { id: 'parcours-croises', name: 'Jeu de Paume', sub: 'Parcours croisés' },
+      { id: 'realisations', name: 'Réalisations', sub: 'La galerie des ateliers' },
+    ],
+  },
+  {
+    cls: 'pub--pro', kicker: 'Je suis professionnel·le', title: 'Me former, accueillir un projet', hub: 'formations', cta: 'Les 8 formations',
+    text: "Formations courtes 2026-2027 pour imaginer et conduire des projets artistiques avec un groupe d'enfants ou d'adolescents.",
+    tiles: [
+      { id: 'formation-cyanotype', name: 'Photo', sub: 'Le Cyanotype, le Sténopé' },
+      { id: 'formation-cinema-animation', name: 'Vidéo', sub: "Cinéma d'animation, audiovisuel" },
+      { id: 'formation-oral-aisance-impact', name: 'Théâtre', sub: "Aisance à l'oral, théâtre 3-6 ans" },
+      { id: 'formation-creation-sonore', name: 'Son', sub: 'Création sonore' },
+    ],
+  },
 ];
 ---
 <section class="hero">
@@ -41,55 +61,42 @@ const rows = [
 
 <div class="marquee" aria-hidden="true"><div class="marquee__track"><span>Photo</span><span>Vidéo</span><span>Théâtre</span><span>Son</span><span>Danse</span><span>Photo</span><span>Vidéo</span><span>Théâtre</span><span>Son</span><span>Danse</span><span>Photo</span><span>Vidéo</span><span>Théâtre</span><span>Son</span><span>Danse</span></div></div>
 
-<!-- Matrice : l'hybride rendu visible. Colonnes = parcours par public (hubs). Lignes = disciplines transversales. -->
-<section class="section" aria-labelledby="matrice">
+<!-- Trois parcours : cartes qui s'empilent (position: sticky). Les tuiles sont des liens vers les pages disciplines. -->
+<section class="section" aria-labelledby="parcours-titre">
   <div class="wrap">
-    <p class="eyebrow reveal">Variante C · hybride</p>
-    <h2 id="matrice" class="reveal">Trois parcours, toutes les disciplines</h2>
-    <p class="lead reveal">Entrez par votre profil (en-têtes de colonne) ou directement par la discipline qui vous intéresse (cellules).</p>
-    <table class="matrix reveal">
-      <thead>
-        <tr>
-          <td></td>
-          {cols.map((c) => (
-            <th scope="col" class={c.cls}><a href={pathOf(variant, c.id)}><small>{c.kicker}</small><span>{c.who}</span><b aria-hidden="true">→</b></a></th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((r) => (
-          <tr>
-            <th scope="row">{r.name}</th>
-            {cols.map((c) => (
-              <td data-label={c.who}>
-                {r.cells[c.key].length === 0 ? <span class="matrix__none">—</span> : r.cells[c.key].map((cell) => <a href={pathOf(variant, cell.id)}>{cell.label}</a>)}
-              </td>
+    <p class="eyebrow reveal">Votre parcours</p>
+    <h2 id="parcours-titre" class="reveal">Un site, trois parcours</h2>
+    <div class="pstack">
+      {parcours.map((p, n) => (
+        <article class={`pcard ${p.cls}`} style={`--n:${n}`}>
+          <Apostrophe />
+          <div class="pcard__intro">
+            <p class="pcard__kicker">{p.kicker}</p>
+            <h3><a class="pcard__title" href={pathOf(variant, p.hub)}>{p.title}</a></h3>
+            <p>{p.text}</p>
+            <a class="btn btn--sm pcard__cta" href={pathOf(variant, p.hub)}>{p.cta} <span class="arrow" aria-hidden="true">→</span></a>
+          </div>
+          <ul class="pcard__tiles">
+            {p.tiles.map((t) => (
+              <li>
+                <a class="tile" href={pathOf(variant, t.id)}>
+                  <span class="tile__name">{t.name}</span>
+                  <span class="tile__sub">{t.sub}</span>
+                  <span class="tile__go" aria-hidden="true">→</span>
+                </a>
+              </li>
             ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    <p class="muted" style="margin-top:1rem">Les pages sont les mêmes que dans le menu : les disciplines servent le référencement (« stage photo ados Paris »), les parcours servent le visiteur.</p>
+          </ul>
+        </article>
+      ))}
+    </div>
   </div>
 </section>
 
-<Section tone="soft" title="Prochains stages ados" eyebrow="12-16 ans">
-  <Sessions sessions={[toussaint]} cta={{ href: pathOf(variant, 'stages-ados')!, label: 'Voir les stages' }} />
-</Section>
-
-<section class="section band--ink">
-  <div class="wrap">
-    <p class="eyebrow reveal">Professionnel·les</p>
-    <h2 class="reveal">Formation professionnelle continue</h2>
-    <p class="lead reveal">40 ans d'expérience dans la co-construction de parcours artistiques avec les classes, transmis en formations courtes.</p>
-    <p class="reveal"><a class="btn btn--ghost" style="color:inherit;border-color:currentColor" href={pathOf(variant, 'formations')}>Découvrir les 8 formations <span class="arrow" aria-hidden="true">→</span></a></p>
-  </div>
-</section>
-
-<Section title="Un lieu au cœur de Paris" eyebrow="Lieu et accès">
+<Section tone="soft" title="Un lieu au cœur de Paris" eyebrow="Lieu et accès">
   <div class="two">
     <div>
-      <p class="lead">1 200 m² dédiés à la pratique, studio théâtre, labo photo, espaces multimédia, cabine d'enregistrement.</p>
+      <p class="lead">1 200 m² dédiés à la pratique : studio théâtre, labo photo, espaces multimédia, cabine d'enregistrement.</p>
       <address style="font-style:normal">{SITE.streetAddress}, {SITE.postalCode} {SITE.city} · Métro Châtelet<br /><a href={`tel:${SITE.phoneHref}`}>{SITE.phone}</a></address>
       <p style="margin-top:1rem"><a class="btn btn--ghost" href={pathOf(variant, 'lieu-acces')}>Lieu et accès</a> <a class="btn btn--ghost" href={pathOf(variant, 'contact')}>Contact</a></p>
     </div>
