@@ -31,7 +31,7 @@ const Body = map[page.template];
   <ProtoBar variant={variant} id={id} path={path} />
   <Header variant={variant} id={id} />
   {id !== 'home' && <Breadcrumb variant={variant} id={id} />}
-  <main id="contenu"><Body variant={variant} id={id} /></main>
+  <main id="contenu" class={id === 'home' ? 'is-home' : undefined}><Body variant={variant} id={id} /></main>
   <Footer variant={variant} />
   <ProtoScript />
 </Base>

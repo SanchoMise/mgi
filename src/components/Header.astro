@@ -12,7 +12,7 @@ let top = idx.get(id);
 while (top && top.depth > 1) top = idx.get(top.parent!);
 const cta = pathOf(variant, 'tarifs-inscription') ?? pathOf(variant, 'stages-ados') ?? pathOf(variant, 'home')!;
 ---
-<header class="site-header">
+<header class="site-header" data-home={id === 'home' ? '' : undefined}>
   <div class="wrap">
     <a class="brand" href={pathOf(variant, 'home')} aria-label="Maison du Geste et de l'Image, accueil">
       <Logo />

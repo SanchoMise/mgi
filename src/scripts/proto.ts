@@ -119,6 +119,7 @@ export function initProto() {
 }
 
 let tiltHandler: (() => void) | null = null;
+let headerHandler: (() => void) | null = null;
 
 function initPage() {
   /* ---- menu mobile ---- */
@@ -144,6 +145,15 @@ function initPage() {
     all.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     if (b.dataset.bfilter) bRows?.setAttribute('data-filter', b.dataset.bfilter); else bRows?.removeAttribute('data-filter');
   }));
+
+  /* ---- accueil : le grand logo se range dans le menu après un petit défilement ---- */
+  const header = document.querySelector<HTMLElement>('.site-header[data-home]');
+  if (headerHandler) { window.removeEventListener('scroll', headerHandler); headerHandler = null; }
+  if (header) {
+    headerHandler = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+    window.addEventListener('scroll', headerHandler, { passive: true });
+    headerHandler();
+  }
 
   /* ---- accueil C : le bandeau change d'orientation pendant le défilement ----
      En bas de l'écran il penche d'un côté, à mi-hauteur il est à plat, en haut il penche de l'autre. */
